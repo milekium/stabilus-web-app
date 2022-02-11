@@ -6,6 +6,13 @@ node_modules
 .quasar
 /dist
 .env
+/.firebase
+.firebase 
+firebase.json
+.firebaserc
+apollo.config.js
+yarn.lock
+package-lock.json
 
 # Cordova related directories and files
 /src-cordova/node_modules
