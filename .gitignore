@@ -13,6 +13,7 @@ firebase.json
 apollo.config.js
 yarn.lock
 package-lock.json
+.vscode
 
 # Cordova related directories and files
 /src-cordova/node_modules
