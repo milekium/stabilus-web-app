@@ -28,8 +28,8 @@ export interface StateInterface {
   storePools: PoolsStateInterface;
 }
 
-// provide typings for `this.$store`
-declare module '@vue/runtime-core' {
+// // provide typings for `this.$store`
+declare module 'vue/runtime-core' {
   interface ComponentCustomProperties {
     $store: VuexStore<StateInterface>;
   }
