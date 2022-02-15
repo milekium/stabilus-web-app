@@ -6,8 +6,12 @@ import {
   useStore as vuexUseStore,
 } from 'vuex';
 
-// import example from './module-example'
-// import { ExampleStateInterface } from './module-example/state';
+import PoolsModule from './PoolStore';
+import { PoolsInterface } from './PoolStore/state';
+import TokenModule from './TokenStore';
+import { TokenInterface } from './TokenStore/state';
+import TerraModule from './TerraStore';
+import { TerraInterface } from './TerraStore/state';
 
 /*
  * If not building with SSR mode, you can
@@ -22,7 +26,9 @@ export interface StateInterface {
   // Define your own store structure, using submodules if needed
   // example: ExampleStateInterface;
   // Declared as unknown to avoid linting issue. Best to strongly type as per the line above.
-  example: unknown;
+  PoolsModule: PoolsInterface;
+  TokenModule: TokenInterface;
+  TerraModule: TerraInterface;
 }
 
 // provide typings for `this.$store`
@@ -39,7 +45,9 @@ export const storeKey: InjectionKey<VuexStore<StateInterface>> =
 export default store(function (/* { ssrContext } */) {
   const Store = createStore<StateInterface>({
     modules: {
-      // example
+      PoolsModule,
+      TokenModule,
+      TerraModule,
     },
 
     // enable strict mode (adds overhead!)
