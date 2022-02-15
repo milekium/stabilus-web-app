@@ -29,7 +29,7 @@ export interface StateInterface {
 }
 
 // // provide typings for `this.$store`
-declare module 'vue/runtime-core' {
+declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $store: VuexStore<StateInterface>;
   }
