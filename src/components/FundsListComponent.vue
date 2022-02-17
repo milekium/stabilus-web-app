@@ -1,9 +1,94 @@
 <template>
-  <q-btn label="update" @click="update" />
+  <div class="row flex items-center justify-center">
+    <div class="col-12">
+      <q-space />
+      <q-item class="right align-right justify-end"
+        >UTC time: {{ dateNow }}</q-item
+      >
+    </div>
+    <div class="q-px-md col-6" style="max-width: 200px">
+      <q-btn
+        label="Activate"
+        @click="bydate = !bydate"
+        flat
+        :disable="bydate ? true : false"
+        :color="bydate ? 'grey-5' : 'primary'"
+      />
+      <q-input
+        filled
+        v-model="startdate"
+        mask="date"
+        :rules="['date']"
+        :disable="bydate ? false : true"
+        :color="bydate ? 'grey-5' : 'primary'"
+      >
+        <template v-slot:append>
+          <q-icon name="event" class="cursor-pointer">
+            <q-popup-proxy
+              ref="qDateProxy"
+              cover
+              transition-show="scale"
+              transition-hide="scale"
+            >
+              <q-date v-model="startdate">
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="Close" color="primary" flat />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+    </div>
+    <div class="q-px-md col-6" style="max-width: 200px">
+      <q-btn
+        label="Activate"
+        @click="bydate = !bydate"
+        flat
+        :disable="bydate ? false : true"
+        :color="bydate ? 'primary' : 'grey-5'"
+      />
+      <q-input
+        filled
+        v-model="starthour"
+        mask="time"
+        :rules="['time']"
+        :disable="bydate ? true : false"
+        label-slot
+      >
+        <template v-slot:label> </template>
+        <template v-slot:append>
+          <q-icon name="access_time" class="cursor-pointer">
+            <q-popup-proxy
+              cover
+              transition-show="scale"
+              transition-hide="scale"
+            >
+              <q-time v-model="starthour" mask="HH:mm" format24h>
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="Close" color="primary" flat />
+                </div>
+              </q-time>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+    </div>
+    <div class="col-12">
+      <q-item v-if="bydate" class="text-h6 justify-center"
+        >DAILY DATA on {{ startdate }}.</q-item
+      >
+    </div>
+    <div class="col-12">
+      <q-item v-if="!bydate" class="text-h6 justify-center"
+        >HOURLY DATA at {{ starthour }} on {{ startdate }} UTC.</q-item
+      >
+    </div>
+  </div>
   <q-table
     title=""
     :columns="columns"
-    :rows="poolsList"
+    :rows="rows"
     row-key="id"
     hide-headers
     hide-bottoms
@@ -16,132 +101,52 @@
 </template>
 
 <script lang="ts">
-//:sort-method="customSort"
 /* eslint-disable */
-import { defineComponent, PropType, onMounted, ref, watch, Ref } from 'vue';
-import { PoolInterface } from 'src/store/PoolStore/state';
-import { TokenInterface } from 'src/store/TokenStore/state';
+import { defineComponent, onMounted, ref, watch, onUnmounted } from 'vue';
 import { useStore } from 'src/store';
-
-const columns = [
-  {
-    name: 'id',
-    label: 'id',
-    align: 'left',
-    field: (row: { id: string }) => row.id,
-    format: (val: any) => `${val}`,
-    sortable: false,
-  },
-  {
-    name: 'name',
-    label: 'Name',
-    align: 'left',
-    field: (row: {
-      token0: TokenInterface;
-      token1: TokenInterface;
-      network: string;
-    }) =>
-      row.token0.symbol + ' / ' + row.token1.symbol + ' (' + row.network + ')',
-    format: (val: any) => `${val}`,
-    sortable: false,
-  },
-  {
-    name: 'tvl',
-    align: 'center',
-    label: 'TVL',
-    field: 'totalValueLockedUSD',
-    sortable: true,
-    format: (val: number) => Number((val / 1).toFixed(0)),
-  },
-  {
-    name: 'volume',
-    align: 'center',
-    label: 'Volume',
-    field: 'volumeUSD',
-    sortable: false,
-    format: (val: number) => Number((val / 1).toFixed(0)),
-  },
-  {
-    name: 'apy',
-    align: 'center',
-    label: 'APY',
-    field: (row: { volumeUSD: number; feesUSD: number }) =>
-      row.feesUSD / row.volumeUSD,
-    sortable: false,
-    format: (val: number) =>
-      val ? Number((val * 100).toFixed(4)) + ' %' : '0 %',
-    // sort: (a: number, b: number) => (a > b ? 1 : a < b ? -1 : 0),
-  },
-  {
-    name: 'feesUSD',
-    label: 'Fees USD',
-    field: (row: { feesUSD: number }) => Number(row.feesUSD).toFixed(2),
-    format: (val: number) => `${val}`,
-    sortable: false,
-    // sort: (a: number, b: number) => (a > b ? 1 : a < b ? -1 : 0),
-  },
-  {
-    name: 'stabilus',
-    label: 'Fees / 1K$',
-    field: (row: {
-      feesUSD: number;
-      totalValueLockedUSD: number;
-      network: string;
-      volumeUSD: number;
-    }) =>
-      row.network == 'Terra'
-        ? parseFloat(((row.feesUSD / row.volumeUSD) * 1000).toFixed(2))
-        : parseFloat(
-            ((row.feesUSD / row.totalValueLockedUSD) * 1000).toFixed(2)
-          ),
-    // format: (val: number) => `${val}` + ' $',
-    sortable: false,
-    sort: (a: number, b: number) => (a > b ? 1 : a < b ? -1 : 0),
-    sortOrder: 'd',
-    classes: (row: {
-      feesUSD: number;
-      totalValueLockedUSD: number;
-      network: string;
-      volumeUSD: number;
-    }) =>
-      parseFloat(((row.feesUSD / row.totalValueLockedUSD) * 1000).toFixed(2)) >
-      3.99
-        ? 'bg-green text-white'
-        : 'bg-red-5 text-white',
-  },
-];
+import { useTable } from 'src/modules/webapp-tables/FundsTable';
+import { getUTCDate } from 'src/modules/utils/date';
+import { format } from 'date-fns';
 
 export default defineComponent({
   name: 'FundsListComponent',
   methods: {},
   setup() {
     const stepper = ref();
-    const addvalue = ref(100000);
+    const bydate = ref(true);
+    const startdate = ref(format(getUTCDate(), 'yyyy/MM/dd'));
+    const starthour = ref(format(getUTCDate(), 'HH:mm'));
+    const dateNow = ref(format(getUTCDate(), 'yyyy/MM/dd  HH:mm:ss'));
+    const dateNowInterval = setInterval(() => {
+      dateNow.value = format(getUTCDate(), 'yyyy/MM/dd  HH:mm:ss');
+    }, 1000);
     const $store = useStore();
-    const poolsList = $store.state.PoolsModule.pools;
-    watch(poolsList, (val) => {
+    const rows = $store.getters['FundsModule/GetFundsByDay'];
+    console.log('Table rows:', rows);
+    const { columns } = useTable(rows);
+    const stopwatch = watch(rows, () => {
       stepper.value.sort('stabilus');
       stepper.value.sort('stabilus');
     });
-    const update = () => {
-      if (addvalue.value == 10000000) {
-        addvalue.value = 100;
-      } else {
-        addvalue.value = 10000000;
-      }
-      console.log(addvalue.value);
-      $store.dispatch('PoolsModule/ACTION_TEST', { value: addvalue.value });
-      stepper.value.sort('stabilus');
-    };
+    const stopdaywatch = watch(startdate, () => {
+      console.log(startdate.value);
+    });
     onMounted(() => {
       stepper.value.sort('stabilus');
-      stepper.value.sort('stabilus');
+    });
+    onUnmounted(() => {
+      stopwatch();
+      stopdaywatch();
+      clearInterval(dateNowInterval);
     });
     return {
       columns,
       stepper,
-      poolsList,
-      update,
+      rows,
+      dateNow,
+      startdate,
+      starthour,
+      bydate,
     };
   },
 });
