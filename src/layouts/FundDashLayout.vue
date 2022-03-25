@@ -15,17 +15,16 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
-import { useStore } from 'src/store';
+// import { useStore } from 'src/store';
 
 export default defineComponent({
   name: 'FundDashLayout',
   components: {},
   setup() {
-    const $store = useStore();
+    // const $store = useStore();
     onMounted(() => {
-      console.log($store);
-      void $store.dispatch('TerraModule/FETCH_DATA');
-      void $store.dispatch('PoolsModule/FETCH_POOLS_DATA');
+      // void $store.dispatch('TerraModule/FETCH_DATA');
+      // void $store.dispatch('PoolsModule/FETCH_POOLS_DATA');
     });
     return {};
   },

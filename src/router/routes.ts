@@ -9,6 +9,26 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/day',
+    component: () => import('layouts/FundDashLayout.vue'),
+    children: [
+      {
+        path: ':day',
+        component: () => import('pages/PoolsDayDataPage.vue'),
+      },
+    ],
+  },
+  {
+    path: '/hour',
+    component: () => import('layouts/FundDashLayout.vue'),
+    children: [
+      {
+        path: ':hour',
+        component: () => import('pages/PoolsHourDataPage.vue'),
+      },
+    ],
+  },
+  {
     path: '/:catchAll(.*)*',
     component: () => import('pages/Error404.vue'),
   },
