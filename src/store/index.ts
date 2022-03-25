@@ -6,6 +6,8 @@ import {
   useStore as vuexUseStore,
 } from 'vuex';
 
+import FundsModule from './FundsStore';
+import { FundsInterface } from './FundsStore/state';
 import PoolsModule from './PoolStore';
 import { PoolsInterface } from './PoolStore/state';
 import TokenModule from './TokenStore';
@@ -29,6 +31,7 @@ export interface StateInterface {
   PoolsModule: PoolsInterface;
   TokenModule: TokenInterface;
   TerraModule: TerraInterface;
+  FundsModule: FundsInterface;
 }
 
 // provide typings for `this.$store`
@@ -48,6 +51,7 @@ export default store(function (/* { ssrContext } */) {
       PoolsModule,
       TokenModule,
       TerraModule,
+      FundsModule,
     },
 
     // enable strict mode (adds overhead!)

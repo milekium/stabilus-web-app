@@ -1,28 +1,33 @@
 import { BigSource } from 'big.js';
-import { Rate } from 'src/modules/utils/types';
+// import { Rate } from 'src/modules/utils/types';
 
-export interface FundInterface {
-  name: string;
+export interface FundDataInterface {
+  label: string;
+  id: string;
+  time: string;
   tvl: BigSource;
   volume: BigSource;
-  apy: Rate;
-  feesusd: BigSource;
+  apy: number;
+  feesUSD: BigSource;
   stabilus_fees: BigSource;
-  network: string;
+  red: string;
+  platform: string;
+  created: string;
+  fund_weight: number;
 }
-export interface FundsInfoInterface {
+export interface FundInterface {
   label: string;
   red: string;
   platform: string;
   id: string;
   created: string;
 }
-const FundsInfo: FundsInfoInterface[] = [
+const FundsInfo: FundInterface[] = [
   {
     label: 'UST',
     red: 'Terra',
     platform: 'Anchor',
-    id: '2',
+    id: '0x6b277fd31d6dd4778415e666781ecf13f9e77e5a',
     created: '',
   },
   {
@@ -196,12 +201,16 @@ const FundsInfo: FundsInfoInterface[] = [
 ];
 
 export interface FundsInterface {
-  funds: FundsInfoInterface[];
+  funds: FundInterface[];
+  dayData: FundDataInterface[];
+  hourData: FundDataInterface[];
 }
 
 function state(): FundsInterface {
   return {
     funds: FundsInfo,
+    dayData: [],
+    hourData: [],
   };
 }
 
