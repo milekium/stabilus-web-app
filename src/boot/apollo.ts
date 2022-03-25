@@ -1,29 +1,23 @@
+/* eslint-disable @typescript-eslint/await-thenable */
 import { ApolloClient, createHttpLink } from '@apollo/client/core';
 import { ApolloClients } from '@vue/apollo-composable';
 import { boot } from 'quasar/wrappers';
 import { getClientOptions } from 'src/apollo';
 
-export default boot(
-  /* async */ ({ app }) => {
-    const options = /* await */ getClientOptions(/* {app, router ...} */);
+const options = getClientOptions(/* {app, router ...} */);
 
-    const UniswapEthOptions = { ...options };
-    UniswapEthOptions.link = createHttpLink({
-      uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-subgraph',
-    });
-    const clientUniswapEth = new ApolloClient(UniswapEthOptions);
+const clientUniswapPol = new ApolloClient(options);
 
-    const UniswapPolOptions = { ...options };
-    UniswapPolOptions.link = createHttpLink({
-      uri: 'https://api.thegraph.com/subgraphs/name/zephyrys/uniswap-polygon-but-it-works',
-    });
-    const clientUniswapPol = new ApolloClient(UniswapPolOptions);
+const UniswapEthOptions = { ...options };
+UniswapEthOptions.link = createHttpLink({
+  uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-subgraph',
+});
+const clientUniswapEth = new ApolloClient(UniswapEthOptions);
 
-    const apolloClients: Record<string, ApolloClient<unknown>> = {
-      clientUniswapPol,
-      clientUniswapEth,
-    };
-
-    app.provide(ApolloClients, apolloClients);
-  }
-);
+export const apolloClients: Record<string, ApolloClient<unknown>> = {
+  clientUniswapPol,
+  clientUniswapEth,
+};
+export default boot(({ app }) => {
+  app.provide(ApolloClients, apolloClients);
+});

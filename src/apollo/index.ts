@@ -1,14 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ApolloClientOptions } from '@apollo/client/core';
 import { createHttpLink, InMemoryCache } from '@apollo/client/core';
-// import type { BootFileParams } from '@quasar/app';
+import type { BootFileParams } from '@quasar/app';
 
-export /* async */ function getClientOptions() {
-  /* {app, router, ...}  options?: Partial<BootFileParams<any>>*/
+export /* async */ function getClientOptions(
+  /* {app, router, ...} */ options?: Partial<BootFileParams<any>>
+) {
   return <ApolloClientOptions<unknown>>Object.assign(
     // General options.
     <ApolloClientOptions<unknown>>{
       link: createHttpLink({
-        uri: '',
+        uri:
+          process.env.GRAPHQL_URI ||
+          // Change to your graphql endpoint.
+          'https://api.thegraph.com/subgraphs/name/zephyrys/uniswap-polygon-but-it-works',
       }),
 
       cache: new InMemoryCache(),
