@@ -5,41 +5,6 @@ import { StateInterface } from '../index';
 import { FundDataInterface, FundInterface, FundsInterface } from './state';
 
 const actions: ActionTree<FundsInterface, StateInterface> = {
-  GetFundsDataByDaybackup({ state, getters, dispatch }, DaysNum: string) {
-    for (let i = 0; i < state.funds.length; i++) {
-      const fund = <FundInterface>getters['GetFundByDayAndId']({
-        time: DaysNum,
-        id: state.funds[i].id,
-      });
-      if (!fund) {
-        const pool = <FundInterface>(
-          getters['GetFundsInfoById'](state.funds[i].id)
-        );
-        const data = <FundDataInterface>{
-          label: pool.label,
-          id: state.funds[i].id,
-          created: pool.created,
-          red: pool.red,
-          platform: pool.platform,
-          time: DaysNum,
-          tvl: 0,
-          volume: 0,
-          feesUSD: 0,
-          apy: 0,
-          stabilus_fees: '',
-        };
-        if (state.funds[i].platform.toLowerCase() == 'uniswap') {
-          void dispatch('PoolsModule/FETCH_UNISWAP_DAY_DATA', data, {
-            root: true,
-          });
-        } else if (state.funds[i].platform.toLowerCase() == 'anchor') {
-          void dispatch('TerraModule/FETCH_ANCHOR_DAY_DATA', data, {
-            root: true,
-          });
-        }
-      }
-    }
-  },
   GetFundsData(
     { state, getters, dispatch },
     payload: { time: string; resolution: string }
@@ -164,6 +129,9 @@ const actions: ActionTree<FundsInterface, StateInterface> = {
     }).catch((e) => {
       console.log(e);
     });
+  },
+  GetFundsHistoricalDatabyDay() {
+    console.log('GetFundsHistoricalDatabyDay');
   },
 };
 

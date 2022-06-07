@@ -3,7 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('layouts/FundDashLayout.vue'),
+    component: () => import('layouts/DashboardLayout.vue'),
     children: [
       { path: '', component: () => import('pages/PoolsDashPage.vue') },
     ],
@@ -25,6 +25,36 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':hour',
         component: () => import('pages/PoolsHourDataPage.vue'),
+      },
+    ],
+  },
+  {
+    path: '/bridge',
+    component: () => import('layouts/DashboardLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/BridgePage.vue'),
+      },
+    ],
+  },
+  {
+    path: '/wallet',
+    component: () => import('layouts/DashboardLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/WalletPage.vue'),
+      },
+    ],
+  },
+  {
+    path: '/chart',
+    component: () => import('layouts/DashboardLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/ChartsPage.vue'),
       },
     ],
   },

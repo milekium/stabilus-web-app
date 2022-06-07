@@ -32,6 +32,10 @@ const getters: GetterTree<FundsInterface, StateInterface> = {
     (payload: { time: string }) => {
       return state.hourData.filter((val) => val.time == payload.time);
     },
+  GetFundsHistoricalDatabyDay:
+    (state: { historicalDayData: FundDataInterface[] }) => () => {
+      return state.historicalDayData;
+    },
 };
 
 export default getters;

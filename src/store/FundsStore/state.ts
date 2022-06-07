@@ -204,6 +204,7 @@ export interface FundsInterface {
   funds: FundInterface[];
   dayData: FundDataInterface[];
   hourData: FundDataInterface[];
+  historicalDayData: FundDataInterface[];
 }
 
 function state(): FundsInterface {
@@ -211,6 +212,7 @@ function state(): FundsInterface {
     funds: FundsInfo,
     dayData: [],
     hourData: [],
+    historicalDayData: [],
   };
 }
 

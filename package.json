@@ -12,9 +12,13 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "@terra-money/terra.js": "^3.0.11",
+    "@terra-money/wallet-provider": "^3.8.1",
+    "chart.js": "^3.7.1",
     "core-js": "^3.6.5",
     "quasar": "^2.0.0",
     "vue": "^3.0.0",
+    "vue-chart-3": "^3.1.8",
     "vue-i18n": "^9.0.0",
     "vue-router": "^4.0.0",
     "vuex": "^4.0.1"
@@ -33,6 +37,7 @@
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^7.0.0",
+    "node-polyfill-webpack-plugin": "^1.1.4",
     "numeral": "^2.0.6",
     "prettier": "^2.5.1"
   },
